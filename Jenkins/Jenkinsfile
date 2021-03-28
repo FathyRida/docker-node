@@ -1,5 +1,10 @@
 node {
    def commit_id
+   
+    environment {
+           dockerImage = 'test123'
+    }
+   
    stage('Preparation') {
      checkout scm
      sh "git rev-parse --short HEAD > .git/commit-id"                        
@@ -12,8 +17,9 @@ node {
      }
    }
    stage('docker build/push') {
-     docker.withRegistry('https://registry.hub.docker.com', 'fathirida') {
-       def app = docker.build("fathirida/docker-nodejs-demo:${commit_id}", '.').push()
-     }
+     script {
+            dockerImage = docker.build
+            docker.build('nodeappdemo')
+        }
    }
 }
